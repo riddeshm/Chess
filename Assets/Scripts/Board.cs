@@ -23,6 +23,7 @@ public class Board : MonoBehaviour
     [SerializeField] private GameObject TilePrefab;
     [SerializeField] private GameObject[] piecePrefabs;
     Tile[,] tiles = new Tile[8, 8];
+    Tile initialTile;
 
     private void Start()
     {
@@ -53,7 +54,9 @@ public class Board : MonoBehaviour
                         obj.GetComponent<MeshRenderer>().material.color = Color.black;
                     }
                 }
-                tiles[i,j] = obj.GetComponent<Tile>();
+                Tile tempTile = obj.GetComponent<Tile>();
+                tempTile.OnTileClicked += OnTileClicked;
+                tiles[i, j] = tempTile;
             }
         }
     }
@@ -101,5 +104,28 @@ public class Board : MonoBehaviour
         obj.name = objName;
         obj.transform.position = tiles[xPos, yPos].transform.position;
         tiles[xPos, yPos].piece = obj.GetComponent<Piece>();
+    }
+
+    void OnTileClicked(Tile currentTile)
+    {
+        if(initialTile != null)
+        {
+            if(initialTile == currentTile)
+            {
+                currentTile.DeselectTile();
+            }
+            else
+            {
+                //Check Move piece
+                currentTile.DeselectTile();
+                initialTile.DeselectTile();
+            }
+            initialTile = null;
+        }
+        else
+        {
+            initialTile = currentTile;
+            currentTile.SelectTile();
+        }
     }
 }
