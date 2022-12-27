@@ -7,6 +7,8 @@ public class Tile : MonoBehaviour
 {
     public Action<Tile> OnTileClicked;
     public Piece piece;
+    public int xPos;
+    public int yPos;
     Renderer rendr;
 
     private void Start()

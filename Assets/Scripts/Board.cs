@@ -55,6 +55,8 @@ public class Board : MonoBehaviour
                     }
                 }
                 Tile tempTile = obj.GetComponent<Tile>();
+                tempTile.xPos = i;
+                tempTile.yPos = j;
                 tempTile.OnTileClicked += OnTileClicked;
                 tiles[i, j] = tempTile;
             }
@@ -78,32 +80,34 @@ public class Board : MonoBehaviour
             }
         }
         //White pieces
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteRook], "WhiteRook7,0", 7, 0);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteRook], "WhiteRook0,0", 0, 0);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteKnight], "WhiteKnight6,0", 6, 0);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteKnight], "WhiteKnight1,0", 1, 0);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteBishop], "WhiteBishop5,0", 5, 0);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteBishop], "WhiteBishop2,0", 2, 0);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteQueen], "WhiteQueen3,0", 3, 0);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteKing], "WhiteKing4,0", 4, 0);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteRook], "WhiteRook7,0", 7, 0, PieceColor.White);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteRook], "WhiteRook0,0", 0, 0, PieceColor.White);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteKnight], "WhiteKnight6,0", 6, 0, PieceColor.White);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteKnight], "WhiteKnight1,0", 1, 0, PieceColor.White);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteBishop], "WhiteBishop5,0", 5, 0, PieceColor.White);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteBishop], "WhiteBishop2,0", 2, 0, PieceColor.White);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteQueen], "WhiteQueen3,0", 3, 0, PieceColor.White);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteKing], "WhiteKing4,0", 4, 0, PieceColor.White);
 
         //black pieces
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackRook], "WhiteRook0,7", 0, 7);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackRook], "WhiteRook7,7", 7, 7);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "WhiteKnight1,7", 1, 7);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "WhiteKnight6,7", 6, 7);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "WhiteBishop2,7", 2, 7);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "WhiteBishop5,7", 5, 7);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackQueen], "WhiteQueen4,7", 4, 7);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKing], "WhiteKing3,7", 3, 7);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackRook], "BlackRook0,7", 0, 7, PieceColor.Black);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackRook], "BlackRook7,7", 7, 7, PieceColor.Black);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "BlackKnight1,7", 1, 7, PieceColor.Black);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "BlackKnight6,7", 6, 7, PieceColor.Black);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "BlackBishop2,7", 2, 7, PieceColor.Black);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "BlackBishop5,7", 5, 7, PieceColor.Black);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackQueen], "BlackQueen4,7", 4, 7, PieceColor.Black);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKing], "BlackKing3,7", 3, 7, PieceColor.Black);
     }
 
-    void SpawnPiece(GameObject prefab, string objName, int xPos, int yPos)
+    void SpawnPiece(GameObject prefab, string objName, int xPos, int yPos, PieceColor pieceColor)
     {
         GameObject obj = Instantiate(prefab, transform);
+        Piece piece = obj.GetComponent<Piece>();
         obj.name = objName;
         obj.transform.position = tiles[xPos, yPos].transform.position;
-        tiles[xPos, yPos].piece = obj.GetComponent<Piece>();
+        piece.pieceColor = pieceColor;
+        tiles[xPos, yPos].piece = piece;
     }
 
     void OnTileClicked(Tile currentTile)
