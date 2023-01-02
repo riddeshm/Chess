@@ -20,6 +20,7 @@ enum PiecePrefabType
 
 public class Board : MonoBehaviour
 {
+    public System.Action<Piece> MoveCompleted;
     [SerializeField] private GameObject TilePrefab;
     [SerializeField] private GameObject[] piecePrefabs;
     Tile[,] tiles = new Tile[8, 8];
@@ -27,11 +28,11 @@ public class Board : MonoBehaviour
 
     private void Start()
     {
-        SpawnChessBoard();
-        SpawnPieces();
+        //SpawnChessBoard();
+        //SpawnPieces();
     }
 
-    private void SpawnChessBoard()
+    public void SpawnChessBoard()
     {
         for (int i = 0; i < 8; i++)
         {
@@ -63,7 +64,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void SpawnPieces()
+    public void SpawnPieces()
     {
         for(int i = 0; i < tiles.GetLength(0); i++)
         {
@@ -96,8 +97,8 @@ public class Board : MonoBehaviour
         SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "BlackKnight6,7", 6, 7, PieceColor.Black, 180);
         SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "BlackBishop2,7", 2, 7, PieceColor.Black, 180);
         SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "BlackBishop5,7", 5, 7, PieceColor.Black, 180);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackQueen], "BlackQueen4,7", 4, 7, PieceColor.Black, 180);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKing], "BlackKing3,7", 3, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackQueen], "BlackQueen3,7", 3, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKing], "BlackKing4,7", 4, 7, PieceColor.Black, 180);
     }
 
     void SpawnPiece(GameObject prefab, string objName, int xPos, int yPos, PieceColor pieceColor, float rotation = 0f)
@@ -115,14 +116,14 @@ public class Board : MonoBehaviour
         }
         catch(System.Exception e)
         {
-            Debug.LogError("piece is not a pawn " + e);
+            
         }
         tiles[xPos, yPos].piece = piece;
     }
 
     void OnTileClicked(Tile currentTile)
     {
-        if(initialTile != null)
+        if (initialTile != null)
         {
             if(initialTile == currentTile)
             {
@@ -133,14 +134,17 @@ public class Board : MonoBehaviour
                 //Check Move piece
                 if(initialTile.piece.CanMove(initialTile, currentTile) && !IsPathBlocked(initialTile, currentTile))
                 {
+                    Piece capturedPiece = null;
                     if(currentTile.piece != null)
                     {
+                        capturedPiece = currentTile.piece;
                         currentTile.piece.gameObject.SetActive(false);
                         currentTile.piece = null;
                     }
                     currentTile.piece = initialTile.piece;
                     initialTile.piece = null;
                     currentTile.piece.transform.position = currentTile.transform.position;
+                    MoveCompleted?.Invoke(capturedPiece);
                 }
                 currentTile.DeselectTile();
                 initialTile.DeselectTile();
@@ -149,8 +153,11 @@ public class Board : MonoBehaviour
         }
         else if(initialTile == null && currentTile.piece != null)
         {
-            initialTile = currentTile;
-            currentTile.SelectTile();
+            if(GameController.Instance.currentPlayer.selectedColor == currentTile.piece.pieceColor)
+            {
+                initialTile = currentTile;
+                currentTile.SelectTile();
+            }
         }
     }
 
