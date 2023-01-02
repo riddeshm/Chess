@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4396500669875302}
   - component: {fileID: 33360194353735420}
   - component: {fileID: 23353531918940410}
+  - component: {fileID: 8288967063592885844}
   m_Layer: 0
   m_Name: queen white
   m_TagString: Untagged
@@ -82,3 +83,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8288967063592885844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097155551969228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7115af414072974faf79471d288997b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pieceColor: 0

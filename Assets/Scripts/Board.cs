@@ -71,11 +71,11 @@ public class Board : MonoBehaviour
             {
                 if(j == 1)
                 {
-                    SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhitePawn], "WhitePawn" + i + "," + "j", i, j);
+                    SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhitePawn], "WhitePawn" + i + "," + "j", i, j, PieceColor.White);
                 }
                 if (j == tiles.GetLength(1) - 2)
                 {
-                    SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackPawn], "BlackPawn" + i + "," + "j", i, j);
+                    SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackPawn], "BlackPawn" + i + "," + "j", i, j, PieceColor.Black, 180);
                 }
             }
         }
@@ -90,23 +90,33 @@ public class Board : MonoBehaviour
         SpawnPiece(piecePrefabs[(int)PiecePrefabType.WhiteKing], "WhiteKing4,0", 4, 0, PieceColor.White);
 
         //black pieces
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackRook], "BlackRook0,7", 0, 7, PieceColor.Black);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackRook], "BlackRook7,7", 7, 7, PieceColor.Black);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "BlackKnight1,7", 1, 7, PieceColor.Black);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "BlackKnight6,7", 6, 7, PieceColor.Black);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "BlackBishop2,7", 2, 7, PieceColor.Black);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "BlackBishop5,7", 5, 7, PieceColor.Black);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackQueen], "BlackQueen4,7", 4, 7, PieceColor.Black);
-        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKing], "BlackKing3,7", 3, 7, PieceColor.Black);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackRook], "BlackRook0,7", 0, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackRook], "BlackRook7,7", 7, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "BlackKnight1,7", 1, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKnight], "BlackKnight6,7", 6, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "BlackBishop2,7", 2, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackBishop], "BlackBishop5,7", 5, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackQueen], "BlackQueen4,7", 4, 7, PieceColor.Black, 180);
+        SpawnPiece(piecePrefabs[(int)PiecePrefabType.BlackKing], "BlackKing3,7", 3, 7, PieceColor.Black, 180);
     }
 
-    void SpawnPiece(GameObject prefab, string objName, int xPos, int yPos, PieceColor pieceColor)
+    void SpawnPiece(GameObject prefab, string objName, int xPos, int yPos, PieceColor pieceColor, float rotation = 0f)
     {
         GameObject obj = Instantiate(prefab, transform);
         Piece piece = obj.GetComponent<Piece>();
         obj.name = objName;
+        obj.transform.Rotate(0, rotation, 0);
         obj.transform.position = tiles[xPos, yPos].transform.position;
         piece.pieceColor = pieceColor;
+        try
+        {
+            Pawn pawn = (Pawn)piece;
+            pawn.spawnTile = tiles[xPos, yPos];
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogError("piece is not a pawn " + e);
+        }
         tiles[xPos, yPos].piece = piece;
     }
 
@@ -121,15 +131,72 @@ public class Board : MonoBehaviour
             else
             {
                 //Check Move piece
+                if(initialTile.piece.CanMove(initialTile, currentTile) && !IsPathBlocked(initialTile, currentTile))
+                {
+                    if(currentTile.piece != null)
+                    {
+                        currentTile.piece.gameObject.SetActive(false);
+                        currentTile.piece = null;
+                    }
+                    currentTile.piece = initialTile.piece;
+                    initialTile.piece = null;
+                    currentTile.piece.transform.position = currentTile.transform.position;
+                }
                 currentTile.DeselectTile();
                 initialTile.DeselectTile();
             }
             initialTile = null;
         }
-        else
+        else if(initialTile == null && currentTile.piece != null)
         {
             initialTile = currentTile;
             currentTile.SelectTile();
         }
+    }
+
+    private bool IsPathBlocked(Tile startTile, Tile endTile)
+    {
+        int x = Mathf.Abs(startTile.xPos - endTile.xPos);
+        int y = Mathf.Abs(startTile.yPos - endTile.yPos);
+        if (x == y)
+        {
+            int dirX = endTile.xPos > startTile.xPos ? 1 : -1;
+            int dirY = endTile.yPos > startTile.yPos ? 1 : -1;
+            for (int i = 1; i < Mathf.Abs(endTile.xPos - startTile.xPos); ++i)
+            {
+                if (tiles[startTile.xPos + i * dirX, startTile.yPos + i * dirY].piece != null)
+                {
+                    return true;
+                }
+            }
+        }
+        else if((x == 0 && y > 0) || (x > 0 && y == 0))
+        {
+            int dirX = endTile.xPos > startTile.xPos ? 1 : -1;
+            int dirY = endTile.yPos > startTile.yPos ? 1 : -1;
+
+            if(x > y)
+            {
+                for (int i = 1; i < Mathf.Abs(endTile.xPos - startTile.xPos); ++i)
+                {
+                    if (tiles[startTile.xPos + i * dirX, startTile.yPos].piece != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i < Mathf.Abs(endTile.yPos - startTile.yPos); ++i)
+                {
+                    if (tiles[startTile.xPos, startTile.yPos + i * dirY].piece != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+            
+        }
+        return false;
     }
 }
