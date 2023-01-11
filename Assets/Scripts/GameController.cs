@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
-    public System.Action<bool> MoveCompleted;
+    public Action<bool> MoveCompleted;
+    public Action OnPlayerConnected;
     public Player[] players;
     public Player currentPlayer;
 
     [SerializeField] private Board board;
+    [SerializeField] private NetworkManager networkManager;
     [SerializeField] private GameObject popup;
     [SerializeField] private Text popupText;
     [SerializeField] private Button popupButton;
@@ -72,6 +75,11 @@ public class GameController : MonoBehaviour
             popupButtonText.text = _buttonContent;
             popupButton.onClick.AddListener(OnButtonClicked);
         }
+    }
+
+    public void ConnectToNetwork()
+    {
+        networkManager.Connect();
     }
 
     public void HidePopup()

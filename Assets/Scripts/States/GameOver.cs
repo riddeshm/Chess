@@ -14,6 +14,7 @@ public class GameOver : State
 
     private void OnExitClicked()
     {
+        GameController.Instance.HidePopup();
         context.ClearCurrentState();
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
