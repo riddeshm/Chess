@@ -16,6 +16,6 @@ public class Intro : State
         GameController.Instance.HidePopup();
         GameController.Instance.ConnectToNetwork();
         GameController.Instance.ShowPopup("Connecting...", "", false, null);
-        context.SetState(new GameSetup());
+        
     }
 }

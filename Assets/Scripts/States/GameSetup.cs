@@ -6,7 +6,8 @@ public class GameSetup : State
 {
     public void Begin(Context context)
     {
-        GameController.Instance.AddPlayers();
+        //GameController.Instance.AddPlayers();
+        GameController.Instance.AddMultiPlayerObject();
         GameController.Instance.SetupBoard();
         context.SetState(new GamePlay());
     }

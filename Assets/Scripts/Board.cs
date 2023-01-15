@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 enum PiecePrefabType
 {
@@ -21,6 +22,7 @@ enum PiecePrefabType
 public class Board : MonoBehaviour
 {
     public System.Action<Piece> MoveCompleted;
+    public System.Action<Tile> OnTileClicked;
     [SerializeField] private GameObject TilePrefab;
     [SerializeField] private GameObject[] piecePrefabs;
     Tile[,] tiles = new Tile[8, 8];
@@ -58,7 +60,7 @@ public class Board : MonoBehaviour
                 Tile tempTile = obj.GetComponent<Tile>();
                 tempTile.xPos = i;
                 tempTile.yPos = j;
-                tempTile.OnTileClicked += OnTileClicked;
+                tempTile.OnTileClicked += BroadCastTileClicked;
                 tiles[i, j] = tempTile;
             }
         }
@@ -118,11 +120,26 @@ public class Board : MonoBehaviour
         {
             
         }
-        tiles[xPos, yPos].piece = piece;
+        tiles[xPos, yPos].Piece = piece;
     }
 
-    void OnTileClicked(Tile currentTile)
+    private void BroadCastTileClicked(Tile currentTile)
     {
+        if(GameController.Instance.currentPlayer1 == PhotonNetwork.LocalPlayer)
+        {
+            CheckTileClicked(currentTile);
+            OnTileClicked?.Invoke(currentTile);
+        }
+    }
+
+    public Tile GetTileAt(Vector2 coords)
+    {
+        return tiles[(int)coords.x, (int)coords.y];
+    }
+
+    public void CheckTileClicked(Tile currentTile)
+    {
+        Debug.Log("Board CheckTileClicked");
         if (initialTile != null)
         {
             if(initialTile == currentTile)
@@ -132,18 +149,18 @@ public class Board : MonoBehaviour
             else
             {
                 //Check Move piece
-                if(initialTile.piece.CanMove(initialTile, currentTile) && !IsPathBlocked(initialTile, currentTile))
+                if(initialTile.Piece.CanMove(initialTile, currentTile) && !IsPathBlocked(initialTile, currentTile))
                 {
                     Piece capturedPiece = null;
-                    if(currentTile.piece != null)
+                    if(currentTile.Piece != null)
                     {
-                        capturedPiece = currentTile.piece;
-                        currentTile.piece.gameObject.SetActive(false);
-                        currentTile.piece = null;
+                        capturedPiece = currentTile.Piece;
+                        currentTile.Piece.gameObject.SetActive(false);
+                        currentTile.Piece = null;
                     }
-                    currentTile.piece = initialTile.piece;
-                    initialTile.piece = null;
-                    currentTile.piece.transform.position = currentTile.transform.position;
+                    currentTile.Piece = initialTile.Piece;
+                    initialTile.Piece = null;
+                    currentTile.Piece.transform.position = currentTile.transform.position;
                     MoveCompleted?.Invoke(capturedPiece);
                 }
                 currentTile.DeselectTile();
@@ -151,9 +168,11 @@ public class Board : MonoBehaviour
             }
             initialTile = null;
         }
-        else if(initialTile == null && currentTile.piece != null)
+        else if(initialTile == null && currentTile.Piece != null)
         {
-            if(GameController.Instance.currentPlayer.selectedColor == currentTile.piece.pieceColor)
+            //if(GameController.Instance.currentPlayer.selectedColor == currentTile.piece.pieceColor)
+            Debug.Log("piece color " + (int)GameController.Instance.currentPlayer1.CustomProperties["PieceColor"]);
+            if((int)GameController.Instance.currentPlayer1.CustomProperties["PieceColor"] == (int)currentTile.Piece.pieceColor)
             {
                 initialTile = currentTile;
                 currentTile.SelectTile();
@@ -171,7 +190,7 @@ public class Board : MonoBehaviour
             int dirY = endTile.yPos > startTile.yPos ? 1 : -1;
             for (int i = 1; i < Mathf.Abs(endTile.xPos - startTile.xPos); ++i)
             {
-                if (tiles[startTile.xPos + i * dirX, startTile.yPos + i * dirY].piece != null)
+                if (tiles[startTile.xPos + i * dirX, startTile.yPos + i * dirY].Piece != null)
                 {
                     return true;
                 }
@@ -186,7 +205,7 @@ public class Board : MonoBehaviour
             {
                 for (int i = 1; i < Mathf.Abs(endTile.xPos - startTile.xPos); ++i)
                 {
-                    if (tiles[startTile.xPos + i * dirX, startTile.yPos].piece != null)
+                    if (tiles[startTile.xPos + i * dirX, startTile.yPos].Piece != null)
                     {
                         return true;
                     }
@@ -196,7 +215,7 @@ public class Board : MonoBehaviour
             {
                 for (int i = 1; i < Mathf.Abs(endTile.yPos - startTile.yPos); ++i)
                 {
-                    if (tiles[startTile.xPos, startTile.yPos + i * dirY].piece != null)
+                    if (tiles[startTile.xPos, startTile.yPos + i * dirY].Piece != null)
                     {
                         return true;
                     }

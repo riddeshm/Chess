@@ -96,3 +96,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceColor: 0
+  spawnTile: {fileID: 0}

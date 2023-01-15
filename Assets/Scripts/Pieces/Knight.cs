@@ -6,9 +6,9 @@ public class Knight : Piece
 {
     public override bool CanMove(Tile startTile, Tile endTile)
     {
-        if (endTile.piece != null)
+        if (endTile.Piece != null)
         {
-            if (endTile.piece.pieceColor == pieceColor)
+            if (endTile.Piece.pieceColor == pieceColor)
             {
                 return false;
             }

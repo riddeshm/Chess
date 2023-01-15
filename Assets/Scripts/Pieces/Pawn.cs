@@ -7,9 +7,9 @@ public class Pawn : Piece
     public Tile spawnTile;
     public override bool CanMove(Tile startTile, Tile endTile)
     {
-        if (endTile.piece != null)
+        if (endTile.Piece != null)
         {
-            if (endTile.piece.pieceColor == pieceColor)
+            if (endTile.Piece.pieceColor == pieceColor)
             {
                 return false;
             }
@@ -31,9 +31,9 @@ public class Pawn : Piece
         }
         else if (x + y == 2 && x == y)
         {
-            if(endTile.piece != null)
+            if(endTile.Piece != null)
             {
-                if(endTile.piece.pieceColor != pieceColor)
+                if(endTile.Piece.pieceColor != pieceColor)
                 {
                     return true;
                 }

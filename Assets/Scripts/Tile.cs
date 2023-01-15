@@ -1,15 +1,20 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
     public Action<Tile> OnTileClicked;
-    public Piece piece;
     public int xPos;
     public int yPos;
-    Renderer rendr;
+
+    private Piece piece;
+    private Renderer rendr;
+
+    public Piece Piece
+    {
+        get { return piece; }
+        set { piece = value; }
+    }
 
     private void Start()
     {
@@ -18,8 +23,6 @@ public class Tile : MonoBehaviour
 
     private void OnMouseUpAsButton()
     {
-        
-
         OnTileClicked?.Invoke(this);
     }
 
