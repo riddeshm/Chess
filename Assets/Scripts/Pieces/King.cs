@@ -6,14 +6,11 @@ public class King : Piece
 {
     public override bool CanMove(Tile startTile, Tile endTile)
     {
-        if(endTile.Piece != null)
+        if (base.CheckSamePieceColorAtEndTile(endTile))
         {
-            if (endTile.Piece.pieceColor == pieceColor)
-            {
-                return false;
-            }
+            return false;
         }
-        
+
         int x = Mathf.Abs(startTile.xPos - endTile.xPos);
         int y = Mathf.Abs(startTile.yPos - endTile.yPos);
         if (x + y == 1)

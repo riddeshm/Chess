@@ -7,15 +7,12 @@ public class Pawn : Piece
     public Tile spawnTile;
     public override bool CanMove(Tile startTile, Tile endTile)
     {
-        if (endTile.Piece != null)
+        if (base.CheckSamePieceColorAtEndTile(endTile))
         {
-            if (endTile.Piece.pieceColor == pieceColor)
-            {
-                return false;
-            }
+            return false;
         }
 
-        if(!IsForwardDirection(transform.position, endTile.transform.position))
+        if (!IsForwardDirection(transform.position, endTile.transform.position))
         {
             return false;
         }
