@@ -25,6 +25,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         int index = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+        GameController.Instance.SetCamera(index);
         GameController.Instance.AddPlayers((PieceColor)index, index);
         GameController.Instance.stateContext.SetState(new GameSetup());
     }

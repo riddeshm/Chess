@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-//using Photon.Realtime;
+using Photon.Pun;
 
 public class GameController : MonoBehaviour
 {
@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Button popupButton;
     [SerializeField] private Text popupButtonText;
     [SerializeField] private GameObject multiPlayerObjectPrefab;
+    [SerializeField] private GameObject[] cameras;
 
     public Context stateContext;
     private int maxPlayers = 2;
@@ -116,6 +117,20 @@ public class GameController : MonoBehaviour
 
     public void AddMultiPlayerObject()
     {
-        Photon.Pun.PhotonNetwork.Instantiate(multiPlayerObjectPrefab.name, Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate(multiPlayerObjectPrefab.name, Vector3.zero, Quaternion.identity);
+    }
+
+    public void SetCamera(int index)
+    {
+        if(index == 0)
+        {
+            cameras[index].SetActive(true);
+            cameras[1].SetActive(false);
+        }
+        else
+        {
+            cameras[index].SetActive(true);
+            cameras[0].SetActive(false);
+        }
     }
 }

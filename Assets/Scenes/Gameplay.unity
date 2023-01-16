@@ -335,6 +335,9 @@ MonoBehaviour:
   popupButton: {fileID: 2083525594}
   popupButtonText: {fileID: 498370144}
   multiPlayerObjectPrefab: {fileID: 548337148878640330, guid: 04c8061007326f344957f03447c079c3, type: 3}
+  cameras:
+  - {fileID: 1564253857}
+  - {fileID: 969046894}
 --- !u!1 &498370142
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,11 +604,11 @@ GameObject:
   - component: {fileID: 969046895}
   m_Layer: 0
   m_Name: CameraTarget (1)
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &969046895
 Transform:
   m_ObjectHideFlags: 0
