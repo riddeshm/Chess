@@ -125,7 +125,7 @@ public class Board : MonoBehaviour
 
     private void BroadCastTileClicked(Tile currentTile)
     {
-        if(GameController.Instance.currentPlayer1 == PhotonNetwork.LocalPlayer)
+        if(GameController.Instance.currentPlayer.index == PhotonNetwork.LocalPlayer.ActorNumber-1)
         {
             CheckTileClicked(currentTile);
             OnTileClicked?.Invoke(currentTile);
@@ -170,9 +170,7 @@ public class Board : MonoBehaviour
         }
         else if(initialTile == null && currentTile.Piece != null)
         {
-            //if(GameController.Instance.currentPlayer.selectedColor == currentTile.piece.pieceColor)
-            Debug.Log("piece color " + (int)GameController.Instance.currentPlayer1.CustomProperties["PieceColor"]);
-            if((int)GameController.Instance.currentPlayer1.CustomProperties["PieceColor"] == (int)currentTile.Piece.pieceColor)
+            if(GameController.Instance.currentPlayer.selectedColor == currentTile.Piece.pieceColor)
             {
                 initialTile = currentTile;
                 currentTile.SelectTile();

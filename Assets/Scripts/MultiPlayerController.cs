@@ -24,15 +24,10 @@ public class MultiPlayerController : MonoBehaviour
     [PunRPC]
     private void RPC_TileClicked(Vector2 coords)
     {
-        Debug.Log("RPC_TileClicked ");
         if(photonView.Owner == PhotonNetwork.LocalPlayer)
         {
-            Debug.Log("LocalPlayer ");
-            Debug.Log("GameController.Instance.currentPlayer1  " + GameController.Instance.currentPlayer1.CustomProperties["PieceColor"]);
-            Debug.Log("PhotonNetwork.LocalPlayer  " + PhotonNetwork.LocalPlayer.CustomProperties["PieceColor"]);
-            if (GameController.Instance.currentPlayer1 != PhotonNetwork.LocalPlayer)
+            if (GameController.Instance.currentPlayer.index != PhotonNetwork.LocalPlayer.ActorNumber-1)
             {
-                Debug.Log("!currentPlayer1 ");
                 Tile currentTile = board.GetTileAt(coords);
                 board.CheckTileClicked(currentTile);
             }

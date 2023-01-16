@@ -12,8 +12,6 @@ public class GameController : MonoBehaviour
     public Action OnPlayerConnected;
     public Player[] players;
     public Player currentPlayer;
-    public List<Photon.Realtime.Player> players1 = new List<Photon.Realtime.Player>();
-    public Photon.Realtime.Player currentPlayer1;
 
     [SerializeField] private Board board;
     [SerializeField] private NetworkManager networkManager;
@@ -24,7 +22,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject multiPlayerObjectPrefab;
 
     public Context stateContext;
-    private int totalPlayers = 2;
+    private int maxPlayers = 2;
 
     public Board Board
     {
@@ -39,6 +37,7 @@ public class GameController : MonoBehaviour
             Instance = null;
         }
         Instance = this;
+        players = new Player[maxPlayers];
     }
 
     private void Start()
@@ -104,31 +103,15 @@ public class GameController : MonoBehaviour
         board.SpawnPieces();
     }
 
-    public void AddPlayers()
+    public void AddPlayers(PieceColor color, int index)
     {
-        players = new Player[totalPlayers];
-        for (int i = 0; i < totalPlayers; i++)
-        {
-            players[i] = new Player();
-            players[i].selectedColor = (PieceColor)i;
-            players[i].index = i;
-        }
+        Player newPlayer = new Player(color, index);
+        players[index] = newPlayer;
     }
 
     public void SetCurrentPlayer(int index)
     {
-        //currentPlayer = players[index];
-        currentPlayer1 = players1[index];
-    }
-
-    public void UpdatePlayersList(Dictionary<int, Photon.Realtime.Player> _players)
-    {
-        players1.Clear();
-        Debug.Log("_players " + _players.Count);
-        foreach (KeyValuePair<int, Photon.Realtime.Player> _player in _players)
-        {
-            players1.Add(_player.Value);
-        }
+        currentPlayer = players[index];
     }
 
     public void AddMultiPlayerObject()

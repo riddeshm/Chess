@@ -8,23 +8,21 @@ public class GamePlay : State
     public void Begin(Context _context)
     {
         context = _context;
-        GameController.Instance.SetCurrentPlayer(GameController.Instance.players1.FindIndex(x => x.ActorNumber-1 == 0));
+        GameController.Instance.SetCurrentPlayer(0);
         GameController.Instance.MoveCompleted += OnMoveCompleted;
     }
 
     private void OnMoveCompleted(bool isGameOver)
     {
-        Debug.Log("OnMoveCompleted");
         if(isGameOver)
         {
             context.SetState(new GameOver());
             return;
         }
-        //int currentPlayerIndex = GameController.Instance.currentPlayer.index;
-        int currentPlayerIndex = GameController.Instance.players1.IndexOf(GameController.Instance.currentPlayer1);
-        if (currentPlayerIndex < GameController.Instance.players1.Count-1)
+        int currentPlayerIndex = GameController.Instance.currentPlayer.index;
+        if (currentPlayerIndex < GameController.Instance.players.Length-1)
         {
-            currentPlayerIndex++; 
+            currentPlayerIndex++;
         }
         else
         {

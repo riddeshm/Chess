@@ -1,8 +1,11 @@
-
-public class Player
+public struct Player
 {
     public PieceColor selectedColor;
     public int index;
-    public Photon.Realtime.Player photonPlayer;
-    public MultiPlayerController multiPlayerController;
+
+    public Player(PieceColor _selectedColor, int _index)
+    {
+        selectedColor = _selectedColor;
+        index = _index;
+    }
 }
