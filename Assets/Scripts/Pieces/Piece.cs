@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum PieceColor
@@ -18,9 +16,9 @@ public abstract class Piece : MonoBehaviour
         {
             if (endTile.Piece.pieceColor == pieceColor)
             {
-                return false;
+                return true;
             }
-        }
-        return true;
+        } 
+        return false;
     }
 }

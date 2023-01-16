@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GamePlay : State
+public class GamePlay : GameState
 {
     private Context context;
     public void Begin(Context _context)

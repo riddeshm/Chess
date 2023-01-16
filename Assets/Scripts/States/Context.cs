@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Context
 {
-    private State currentState;
+    private GameState currentState;
 
     public Context()
     {
 
     }
 
-    public void SetState(State state)
+    public void SetState(GameState state)
     {
         if(currentState != null)
         {

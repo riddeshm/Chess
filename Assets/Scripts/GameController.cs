@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 
 public class GameController : MonoBehaviour
 {
@@ -19,8 +16,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private Text popupText;
     [SerializeField] private Button popupButton;
     [SerializeField] private Text popupButtonText;
-    [SerializeField] private GameObject multiPlayerObjectPrefab;
     [SerializeField] private GameObject[] cameras;
+    [SerializeField] private Text turnText;
+    [SerializeField] private Text pieceColorText;
 
     public Context stateContext;
     private int maxPlayers = 2;
@@ -113,11 +111,9 @@ public class GameController : MonoBehaviour
     public void SetCurrentPlayer(int index)
     {
         currentPlayer = players[index];
-    }
-
-    public void AddMultiPlayerObject()
-    {
-        PhotonNetwork.Instantiate(multiPlayerObjectPrefab.name, Vector3.zero, Quaternion.identity);
+        int localPlayerIndex = Photon.Pun.PhotonNetwork.LocalPlayer.ActorNumber - 1;
+        string player = localPlayerIndex == currentPlayer.index ? "Your" : "Opponent's";
+        SetTurnText(player + " Turn", localPlayerIndex == 0 ? Color.white : Color.black);
     }
 
     public void SetCamera(int index)
@@ -132,5 +128,17 @@ public class GameController : MonoBehaviour
             cameras[index].SetActive(true);
             cameras[0].SetActive(false);
         }
+    }
+
+    private void SetTurnText(string _text, Color color)
+    {
+        turnText.text = _text;
+        turnText.color = color;
+    }
+
+    public void SetPieceText(string _text, Color color)
+    {
+        pieceColorText.text = _text;
+        pieceColorText.color = color;
     }
 }

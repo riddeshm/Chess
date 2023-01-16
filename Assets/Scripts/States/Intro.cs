@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Intro : State
+public class Intro : GameState
 {
     private Context context;
     public void Begin(Context _context)

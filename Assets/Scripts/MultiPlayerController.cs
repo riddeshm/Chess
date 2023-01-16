@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
@@ -24,8 +22,10 @@ public class MultiPlayerController : MonoBehaviour
     [PunRPC]
     private void RPC_TileClicked(Vector2 coords)
     {
+        //local MultiPlayerController instance
         if(photonView.Owner == PhotonNetwork.LocalPlayer)
         {
+            //Current player is not local player
             if (GameController.Instance.currentPlayer.index != PhotonNetwork.LocalPlayer.ActorNumber-1)
             {
                 Tile currentTile = board.GetTileAt(coords);
